@@ -1,0 +1,45 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+@font-face {
+      font-family: 'Carbona Extra Light';
+      src: url('./fonts/carbona_extralight.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+}
+
+@font-face {
+      font-family: 'Carbona Light';
+      src: url('./fonts/carbona_light.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+}
+
+
+@theme {
+      --font-primary: "Carbona Light", sans-serif; 
+      --font-light: "Carbona Extra Light", sans-serif; 
+}
+
+@media (prefers-color-scheme: light) {
+      :root{
+            --color-primary: #25252c;       
+            --color-secondary: #b6b8c3;      
+            --color-accent: #40414d;   
+            --color-base-100: #f7f7f8;      
+            --color-error: #E60F0F;
+            --color-right: #1ddaad;
+
+      }
+}
+
+@media (prefers-color-scheme: dark) {
+      :root {
+            --color-primary: #f5f5f5;       
+            --color-secondary: #aabfe2;
+            --color-accent: #1968F0;   
+            --color-base-100: #171b24;      
+            --color-error: #AD0B0B;     
+            --color-right: #00674F;
+      }
+}
