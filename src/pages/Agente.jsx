@@ -1,5 +1,5 @@
 import Navbar from "../components/Navbar"
-import { ArrowCircleLeftIcon } from "@phosphor-icons/react"
+import { ArrowCircleLeftIcon, PlusCircleIcon } from "@phosphor-icons/react"
 import { useNavigate, useSearchParams } from "react-router-dom";
 import CollapseAgente from "../components/CollapseAgente";
 
@@ -34,7 +34,11 @@ export default () => {
                     </div>
                 </div>
 
-                <div>
+                <div className="mt-5">
+                    <div className="flex justify-center items-center bg-accent/30 h-15.5 rounded-md text-primary font-primary">
+                        <PlusCircleIcon size={32} weight="thin" />
+                        <p className="text-xl">Novo prompt</p>
+                    </div>
                     {vetHistorico.map(item => {
                         return(
                             <CollapseAgente prompt={item} />
