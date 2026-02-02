@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 export default (props) => {
 
+    console.log(props.id);
+    
     const navigate = useNavigate();
     
     function paginaAgentes(){

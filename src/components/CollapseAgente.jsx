@@ -23,7 +23,7 @@ export default (props) => {
     //obs do prompt
     const [observacoes, setObservacoes] = useState(props.prompt.obs)
     //se o titulo for vazio, o editmode é true
-    const [ isEditMode, setIsEditMode ] = useState(props.prompt.alteracao = '' ? true : false) 
+    const [ isEditMode, setIsEditMode ] = useState(props.prompt.alteracao ? false : true) 
     //titulo do bloco
     const [ alteracao, setAlteracao ] = useState(props.prompt.alteracao)
     
@@ -69,14 +69,6 @@ export default (props) => {
         }, 800); 
     }
 
-    //função de apagar prompt por completo
-    function apagaHistorico(){
-        const tempLista = localStorageRead
-        tempLista[fluxoIndex].agentes[agenteIndex].historico.splice(historicoIndex, 1)
-        setLocalStorageRead(tempLista)
-        localStorage.setItem("fluxos", JSON.stringify(localStorageRead));
-    }
-
 
     //salva ao alterar prompt
     useEffect(() => {
@@ -107,17 +99,21 @@ export default (props) => {
     return (
         <div className="relative">
             {/* Botões e título ficam como absolute para interação, se alterado, os botões não funcionam */}
-            <div className="flex gap-2 absolute right-5 top-3 z-1">
+            <div className="flex gap-2 absolute right-22 top-3 z-1">
+
                 {isEditMode ? 
-                <input type="text" placeholder="Alteração feita" value={alteracao} onChange={(e) => setAlteracao(e.target.value)} className="input text-primary text-xl font-primary mr-5 w-150" autoFocus onKeyDown={(e) => {e.key == 'Enter' ? setIsEditMode(!isEditMode) : e.key == 'Escape' ? setIsEditMode(!isEditMode) :null}}/> : 
+                <input type="text" placeholder="Alteração feita" value={alteracao} onChange={(e) => setAlteracao(e.target.value)} className="input text-primary text-xl font-primary mr-5 w-150" autoFocus onKeyDown={(e) => {e.key == 'Enter' ? setIsEditMode(!isEditMode) : e.key == 'Escape' ? setIsEditMode(!isEditMode) :null}} /> : 
                 <h2 className="font-primary text-2xl text-base-100 mt-1 mr-5">{alteracao}</h2>}
-                <button class="btn btn-base-100/70 w-15" onClick={() => setIsEditMode(!isEditMode)}><PencilIcon size={32} weight="thin" /></button>
-                <button class="btn bg-red-100 text-red-600 w-15" onClick={()=>document.getElementById('modal_apaga').showModal()}><TrashSimpleIcon size={32} weight="thin" /></button>
+
+                <button class="btn btn-base-100/70 w-15" onClick={() => {alteracao ? setIsEditMode(!isEditMode) : setIsEditMode(true)}}>
+                    {isEditMode ? <CheckIcon size={32} weight="thin"/> :<PencilIcon size={32} weight="thin" />}
+                </button>
+                
             </div>
             <div tabindex="0" class="collapse bg-accent border-base-300 border mt-6 text-base-100" >
                 <input type="checkbox" />
                 <div class="collapse-title font-primary text-2xl">
-                    <h2 className="self-center">{props.prompt.posicao}</h2>
+                    <h2 className="self-center">{props.posicao}</h2>
                 </div>
                 <div class="collapse-content font-primary bg-secondary text-primary">
                     <div className="mt-2 flex gap-5">
@@ -252,24 +248,6 @@ export default (props) => {
                 </form>
             </dialog>
             
-            
-            {/* Modal de confirmação de apagamento */}
-            <dialog id="modal_apaga" className="modal">
-                <div className="modal-box bg-base-100">
-                    <form method="dialog">
-                        <button className="btn btn-xs btn-circle btn-ghost absolute right-10 top-5 bg-red-50 text-red-700 hover:bg-red-700 hover:text-red-50" >✕</button>
-                    </form>
-                    <h3 className="text-2xl font-primary mb-2">Código</h3>
-                    <p>Deseja realmente apagar o histórico selecionado "{props.prompt.alteracao}"?</p>
-                    <form method="dialog" className="flex gap-2 mt-2">
-                        <button className="btn btn-secondary text-primary">Cancelar</button>
-                        <button className="btn bg-red-50 text-red-600" onClick={apagaHistorico}>Apagar</button>
-                    </form>
-                </div>
-                <form method="dialog" className="modal-backdrop">
-                    <button>close</button>
-                </form>
-            </dialog>
         </div>
     )
 }

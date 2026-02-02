@@ -3,6 +3,7 @@ import Card from "../components/Card.jsx"
 import { useState } from "react"
 import { MagnifyingGlassIcon, PlusCircleIcon } from "@phosphor-icons/react"
 import { useNavigate } from "react-router-dom"
+import imageCompression from 'browser-image-compression';
 
 
 export default () => {
@@ -22,17 +23,19 @@ export default () => {
         contrato.add(item.contrato)
     })}
 
-    function handleImagem(e) {
+    async function handleImagem(e) {
+        
         const file = e.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-
-        reader.onloadend = () => {
-            setBase64(reader.result);
+        const options = {
+            maxSizeMB: 0.1,          
+            maxWidthOrHeight: 100,   
+            useWebWorker: true,     
+            fileType: 'image/webp'  
         };
-
-        reader.readAsDataURL(file);
+        const compressedFile = await imageCompression(file, options)
+        setBase64(await imageCompression.getDataUrlFromFile(compressedFile));
+        console.log(base64);
+        
     }
 
 

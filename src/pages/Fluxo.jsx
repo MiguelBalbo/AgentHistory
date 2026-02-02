@@ -4,6 +4,7 @@ import { useState } from "react"
 import { ArrowCircleLeftIcon, MagnifyingGlassIcon, PlusCircleIcon } from "@phosphor-icons/react"
 import { useSearchParams, useNavigate } from "react-router-dom"
 
+
 export default () => {
     
     const localStorageRead = localStorage.getItem("fluxos") ? JSON.parse(localStorage.getItem("fluxos")) : []
@@ -21,7 +22,7 @@ export default () => {
         subfluxo.add(item.subfluxo)
     })}
 
-
+    
     function irParaHome() {
         navigate(-1);
     }
@@ -56,6 +57,7 @@ export default () => {
                         .filter(card => filtro === 'tudo' || card.subfluxo === filtro)
                         .filter(card => filtro === '' || card.nomeAgente.toLowerCase().includes(busca.toLowerCase()))
                         .map(item => {
+
                             return (
                                 <Card key={item.id} id={item.id} titulo={item.nomeAgente} subtitulo={item.subfluxo}/>
                             )

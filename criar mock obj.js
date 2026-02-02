@@ -10,7 +10,6 @@ const objMock = [{
         historico: [{
             id: crypto.randomUUID(),
             alteracao: "Criação de um novo ponto",
-            posicao: 2,
             prompt: "#prompt\nVocê é um bot feliz",
             formato: 1,
             obs: "Testes",
