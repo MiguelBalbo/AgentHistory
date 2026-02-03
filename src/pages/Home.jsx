@@ -24,7 +24,6 @@ export default () => {
     })}
 
     async function handleImagem(e) {
-        
         const file = e.target.files[0];
         const options = {
             maxSizeMB: 0.1,          
@@ -35,7 +34,6 @@ export default () => {
         const compressedFile = await imageCompression(file, options)
         setBase64(await imageCompression.getDataUrlFromFile(compressedFile));
         console.log(base64);
-        
     }
 
 
@@ -71,7 +69,7 @@ export default () => {
                             <Card key={item.id} item={item} />
                         )
                     })}
-                    <div className="card bg-secondary/50 w-60 h-73 shadow-sm" onClick={()=>document.getElementById('my_modal_3').showModal()}>
+                    <div className="card bg-secondary/50 w-60 h-74 shadow-sm" onClick={()=>document.getElementById('my_modal_3').showModal()}>
                         <div className="card-body items-center justify-center text-center">
                             <PlusCircleIcon size={44} weight="thin" />
                             <h2 className="card-title text-primary font-primary">Adicionar</h2>

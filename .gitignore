@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+#Logos/marcas
+/src/assets/brand_favicon.svg
+/src/assets/brand.svg

@@ -73,7 +73,7 @@ export default () => {
 
 
 
-            {/* modal de criar fluxo */}
+            {/* modal de criar agente */}
             <dialog id="modal_add_agente" class="modal">
                 <div class="modal-box">
                     <form method="dialog">

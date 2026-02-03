@@ -38,9 +38,13 @@ export default () => {
         const vetHistoricoNew = [{
             id: crypto.randomUUID(),
             alteracao: "",
-            prompt: "",
-            formato: 1,
-            obs: "",
+            prompts: [{
+                id: crypto.randomUUID(),
+                tipo: 0,
+                conteudo:"",
+                formato: 1,
+                obs: ""
+            }],
             status: 0
         }]
 

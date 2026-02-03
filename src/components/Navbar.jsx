@@ -1,5 +1,4 @@
-import { DownloadIcon, GearIcon, UploadIcon } from "@phosphor-icons/react";
-import BlipLogo from "../assets/blip.svg"
+import { DownloadIcon, GearIcon, RobotIcon, UploadIcon } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
 
 export default () => {
@@ -46,7 +45,7 @@ export default () => {
         <div class="navbar bg-accent shadow-sm h-22.5">
             <div class="flex-1">
                 <button class="btn btn-ghost btn-accent" onClick={irParaHome}>
-                    <img src={BlipLogo} alt="" className="w-20" />
+                    <RobotIcon size={40} weight="fill" className="text-base-100" />
                 </button>
             </div>
             <div class="flex-none">
