@@ -80,7 +80,7 @@ export default () => {
                     <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                     </form>
 
-                    <h3 class="text-2xl text-primary font-light">Novo agente</h3>
+                    <h3 class="text-2xl text-primary font-secondary">Novo agente</h3>
                     <form onSubmit={(e) => {
                         e.preventDefault();
 

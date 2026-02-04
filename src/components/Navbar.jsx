@@ -50,11 +50,11 @@ export default () => {
             </div>
             <div class="flex-none">
                 <button class="btn btn-ghost btn-accent">
-                    <h1 className="font-light text-base-100 text-xl">Agent History</h1>
+                    <h1 className="font-secondary text-base-100 text-xl">Agent History</h1>
                 </button>
 
                 <button class="btn btn-ghost btn-accent">
-                    <h1 className="font-light text-base-100 text-xl" onClick={()=>document.getElementById('modal_config').showModal()}><GearIcon size={32} weight="thin" /></h1>
+                    <h1 className="font-secondary text-base-100 text-xl" onClick={()=>document.getElementById('modal_config').showModal()}><GearIcon size={32} weight="thin" /></h1>
                 </button>
             </div>
 

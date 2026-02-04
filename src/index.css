@@ -1,5 +1,8 @@
 @import "tailwindcss";
+@import "flowbite-react/plugin/tailwindcss";
+@source "../.flowbite-react/class-list.json";
 @plugin "daisyui";
+
 
 @font-face {
       font-family: 'Carbona Extra Light';
@@ -15,20 +18,70 @@
       font-style: normal;
 }
 
+@font-face {
+      font-family: 'Diamond Grotesk';
+      src: url('./fonts/diamond.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+}
+
+@font-face {
+      font-family: 'Diamond Grotesk';
+      src: url('./fonts/diamond.woff2') format('woff2');
+      font-weight: bold;
+      font-style: normal;
+}
+
+@font-face {
+      font-family: 'Lunchtype';
+      src: url('./fonts/lunchtype.woff2') format('woff2');
+      font-weight: light;
+      font-style: normal;
+}
+
+@font-face {
+      font-family: 'Lunchtype';
+      src: url('./fonts/lunchtype.woff2') format('woff2');
+      font-weight: bold;
+      font-style: normal;
+}
+
+@font-face {
+      font-family: 'Inter Display';
+      src: url('./fonts/inter_display_light.woff2') format('woff2');
+      font-weight: light;
+      font-style: normal;
+}
+
+@font-face {
+      font-family: 'Inter Display';
+      src: url('./fonts/inter_display.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+}
+
+@font-face {
+      font-family: 'Inter Display Bold';
+      src: url('./fonts/inter_display_bold.woff2') format('woff2');
+      font-weight: bold;
+      font-style: normal;
+}
+
+
 
 @theme {
-      --font-primary: "Carbona Light", sans-serif; 
-      --font-light: "Carbona Extra Light", sans-serif; 
+      --font-primary: "Diamond Grotesk", sans-serif; 
+      --font-secondary: "Inter Display", sans-serif; 
 }
 
 @media (prefers-color-scheme: light) {
       :root{
-            --color-primary: #25252c;       
-            --color-secondary: #b6b8c3;      
-            --color-accent: #40414d;   
-            --color-base-100: #f7f7f8;      
-            --color-error: #E60F0F;
-            --color-right: #1ddaad;
+            --color-primary: #f7f7f8;       
+            --color-secondary: #171819;      
+            --color-accent: #3d8ad9;   
+            --color-base-100: #f7f7f7;      
+            --color-error: #d62022;
+            --color-right: #69d81d;
 
       }
 }
