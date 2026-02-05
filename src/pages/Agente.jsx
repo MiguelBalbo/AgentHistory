@@ -81,7 +81,7 @@ export default () => {
                 </div>
 
                 <div className="mt-5">
-                    <div className="flex justify-center items-center bg-accent/30 h-15.5 rounded-md text-primary font-primary" onClick={() => novoPrompt()}>
+                    <div className="flex justify-center items-center bg-linear-to-br from-accent/60 to-accent/80 hover:from-accent/80 hover:to-accent h-15.5 rounded-md text-secondary font-primary cursor-pointer" onClick={() => novoPrompt()}>
                         <PlusCircleIcon size={32} weight="thin" />
                         <p className="text-xl">Novo prompt</p>
                     </div>
@@ -89,7 +89,7 @@ export default () => {
                 
                             return(
                                 <div className="relative">
-                                    <button class="btn bg-red-100 text-red-600 w-15 absolute right-5 top-3 z-1" onClick={()=>{document.getElementById('modal_apaga').showModal(); setPromptPos([index, item.alteracao]) }}><TrashSimpleIcon size={32} weight="thin" /></button>
+                                    <button class="btn bg-linear-to-br from-red-100 to-red-200 dark:from-red-600/60 dark:to-red-700/60 text-red-600 dark:text-red-300 hover:from-red-200 hover:to-red-300 hover:dark:from-red-500/60 hover:dark:to-red-600/60 shadow-inner shadow-red-100 dark:shadow-red-600/75 w-15 absolute right-5 top-3 z-1" onClick={()=>{document.getElementById('modal_apaga').showModal(); setPromptPos([index, item.alteracao]) }}><TrashSimpleIcon size={32} weight="thin" /></button>
                                     <CollapseAgente prompt={item} posicao={index+1} key={i} />
                                 </div>
                             )

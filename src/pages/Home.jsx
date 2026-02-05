@@ -78,9 +78,9 @@ export default () => {
                         )
                     })}
                     <button
-                        className="bg-linear-to-br from-accent/30 to-accent/50 w-50 h-75 shadow-sm hover:shadow-xl hover:shadow-accent/25 rounded-2xl cursor-pointer"
+                        className="bg-linear-to-br from-accent/30 to-accent/50 hover:from-accent/50 hover:to-accent/70 w-50 h-75 shadow-sm hover:shadow-xl hover:shadow-accent/25 rounded-2xl cursor-pointer"
                         onClick={()=>document.getElementById('my_modal_3').showModal()}>
-                        <div className="flex flex-col items-center justify-center text-center font-primary text-gray-900 dark:text-gray-50">
+                        <div className="flex flex-col items-center justify-center text-center font-primary text-gray-900 dark:text-gray-50 border-accent/70">
                             <PlusCircleIcon size={44} weight="thin" />
                             <h2 className="text-xl">Adicionar</h2>
                         </div>

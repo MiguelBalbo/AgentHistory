@@ -3,6 +3,7 @@ import Card from "../components/CardAgent.jsx"
 import { useState } from "react"
 import { ArrowCircleLeftIcon, MagnifyingGlassIcon, PlusCircleIcon } from "@phosphor-icons/react"
 import { useSearchParams, useNavigate } from "react-router-dom"
+import { TextInput, Select } from "flowbite-react"
 
 
 export default () => {
@@ -37,18 +38,17 @@ export default () => {
                         <h1 className="font-primary text-4xl">{fluxoSel.nomeFluxo}</h1>
                     </div>
                     <div className="flex gap-5">
-                        <label class="input w-100 rounded-full bg-secondary/50">
-                            <MagnifyingGlassIcon size={24} className="text-primary"/>
-                            <input type="search" class="grow" placeholder="Buscar" className="font-primary text-primary" onChange={(e) => setBusca(e.target.value)}/>
-                        </label>
-                        <select onChange={(e) => setFiltro(e.target.value)} class="select font-primary text-primary rounded-full bg-secondary/50">
+                        <div className="w-100">
+                            <TextInput className="text-secondary font-secondary font-light" type="text" icon={MagnifyingGlassIcon} placeholder="Buscar" onChange={(e) => setBusca(e.target.value)} />
+                        </div>
+                        <Select onChange={(e) => setFiltro(e.target.value)} className="font-secondary font-light text-secondary w-75">
                             <option selected value='tudo'>Todos os subfluxos</option>
                             {Array.from(subfluxo).map(item => {
                                 return(
                                     <option value={item}>{item}</option>
                                 )
                             })}
-                        </select>
+                        </Select>
                     </div>
                 </div>
 
@@ -62,12 +62,14 @@ export default () => {
                                 <Card key={item.id} id={item.id} titulo={item.nomeAgente} subtitulo={item.subfluxo}/>
                             )
                     })}
-                    <div className="card bg-secondary/50 w-60 h-60 shadow-sm" onClick={()=>document.getElementById('modal_add_agente').showModal()}>
-                        <div className="card-body items-center justify-center text-center">
+                    <button 
+                    className="bg-linear-to-br from-accent/30 to-accent/50 hover:from-accent/50 hover:to-accent/70 w-40 h-55 shadow-sm hover:shadow-xl hover:shadow-accent/25 rounded-2xl cursor-pointer" 
+                    onClick={()=>document.getElementById('modal_add_agente').showModal()}>
+                        <div className="flex flex-col items-center justify-center text-center font-primary text-gray-900 dark:text-gray-50 border-accent/70">
                             <PlusCircleIcon size={44} weight="thin" />
-                            <h2 className="card-title text-primary font-primary">Adicionar</h2>
+                            <h2 className="card-title">Adicionar</h2>
                         </div>
-                    </div>
+                    </button>
                 </div>
             </div>
 
@@ -75,12 +77,15 @@ export default () => {
 
             {/* modal de criar agente */}
             <dialog id="modal_add_agente" class="modal">
-                <div class="modal-box">
-                    <form method="dialog">
-                    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-                    </form>
+                <div class="modal-box px-0">
+                    <div className="flex">
+                        <h3 class="text-2xl text-secondary font-primary ml-6 mt-1">Novo agente</h3>
+                        <form method="dialog">
+                            <button class="btn btn-md btn-circle btn-ghost ml-72">✕</button>
+                        </form>
+                    </div>
+                    <hr className="text-secondary/20 mt-3.5 -my-2" />
 
-                    <h3 class="text-2xl text-primary font-secondary">Novo agente</h3>
                     <form onSubmit={(e) => {
                         e.preventDefault();
 
@@ -100,18 +105,20 @@ export default () => {
 
                         window.location.reload();
 
-                    }} className="">
-                        <div className="mt-3">
-                            <label htmlFor="fluxoinpt" className="text-primary font-primary">Nome do Agente</label>
-                            <input onChange={(e) => setAgenteF(e.target.value)} type="text" id="fluxoinpt" placeholder="Digite o nome do agente" className="input w-full text-primary font-primary" required />
+                    }} className="px-6 mt-5">
+
+                        <div className="mt-3 text-secondary font-secondary">
+                            <label htmlFor="fluxoinpt" className="">Nome do Agente</label>
+                            <input onChange={(e) => setAgenteF(e.target.value)} type="text" id="fluxoinpt" placeholder="Digite o nome do agente" className="input w-full" required />
                         </div>
 
-                        <div className="mt-3">
-                            <label htmlFor="contratoinpt" className="text-primary font-primary">Nome do subfluxo</label>
-                            <input onChange={(e) => setSubfluxoF(e.target.value)} type="text" id="contratoinpt" placeholder="Digite o nome do subfluxo" className="input w-full text-primary font-primary" required />
+                        <div className="mt-3 text-secondary font-secondary">
+                            <label htmlFor="contratoinpt" className="">Nome do subfluxo</label>
+                            <input onChange={(e) => setSubfluxoF(e.target.value)} type="text" id="contratoinpt" placeholder="Digite o nome do subfluxo" className="input w-full" required />
                         </div>
 
-                        <button class="btn btn-secondary text-primary font-primary mt-3" type="submit">Salvar</button>
+                        <hr className="text-secondary/20 mt-4 -mx-6 " />
+                        <button class="btn bg-linear-to-b from-gray-700/90 hover:from-gray-800 hover:to-gray-900 to-gray-800/90 hover:dark:from-slate-300 hover:dark:to-slate-400 dark:from-slate-200 dark:to-slate-300 shadow-inner shadow-gray-600 dark:shadow-slate-100 text-white dark:text-gray-900 font-secondary font-light mt-3 w-full" type="submit">Salvar</button>
                     </form>
                 </div>
             </dialog>

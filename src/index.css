@@ -88,8 +88,8 @@
 
 @media (prefers-color-scheme: dark) {
       :root {
-            --color-primary: #f5f5f5;       
-            --color-secondary: #aabfe2;
+            --color-primary: #171819;       
+            --color-secondary: #f7f7f8;
             --color-accent: #1968F0;   
             --color-base-100: #171b24;      
             --color-error: #AD0B0B;     

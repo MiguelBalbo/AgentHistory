@@ -63,7 +63,7 @@ export default (props) => {
                             <p className="font-primary text-2xl">{fluxo}</p>
                             <div>
                                 <button 
-                                className="btn bg-linear-to-b from-gray-700/90 to-gray-800/90 dark:from-slate-200 dark:to-slate-300 shadow-inner shadow-gray-600 dark:shadow-slate-100 text-white dark:text-gray-900 font-secondary font-light" 
+                                className="btn bg-linear-to-br from-gray-700/90 hover:from-gray-800 hover:to-gray-900 to-gray-800/90 hover:dark:from-slate-300 hover:dark:to-slate-400 dark:from-slate-200 dark:to-slate-300 shadow-inner shadow-gray-600 dark:shadow-slate-100 text-white dark:text-gray-900 font-secondary font-light" 
                                 onClick={paginaAgentes}>
                                     Acessar <ArrowRightIcon size={24} weight="thin" />
                                 </button>

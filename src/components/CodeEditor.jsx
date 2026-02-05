@@ -1,4 +1,4 @@
-import { ArrowsOutSimpleIcon, CaretDownIcon, CaretUpIcon, CheckIcon, CopyIcon, TrashIcon} from "@phosphor-icons/react"
+import { ArrowsOutSimpleIcon, CaretDownIcon, CaretUpIcon, CheckIcon, CopyIcon, TrashSimpleIcon} from "@phosphor-icons/react"
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { EditorView } from '@codemirror/view';
 import { xml } from "@codemirror/lang-xml";
@@ -7,6 +7,7 @@ import { json } from "@codemirror/lang-json";
 import { markdown } from "@codemirror/lang-markdown";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
+import { Select, Textarea } from "flowbite-react";
 
 export default (props) => {
     //verifica se está armazenado antes de executar o parse
@@ -123,7 +124,7 @@ export default (props) => {
                 <div>
                     <div className="mt-2 flex gap-5">
                         <div className="w-full">
-                            <p className="text-xl mb-2">Código</p>
+                            <p className="text-2xl text-secondary mb-2">Código</p>
                             <div className="relative">
                                 {/* editor de código */}
                                 <ReactCodeMirror
@@ -136,11 +137,11 @@ export default (props) => {
                                 
                                 <div className="absolute bottom-4 right-5">
                                     {/* Botão de fullscreen */}
-                                    <button className="btn bg-base-100/70 w-15 text-primary mr-1" onClick={()=>document.getElementById('modal_codigo').showModal()}>
+                                    <button className="btn bg-linear-to-b from-slate-100 to-slate-300 hover:from-slate-200 hover:to-slate-400 opacity-75 w-15 text-secondary mr-1 border-0 shadow-inner" onClick={()=>document.getElementById('modal_codigo').showModal()}>
                                         <ArrowsOutSimpleIcon size={32} weight="thin" />
                                     </button>
                                     {/* Botão de cópia */}
-                                    <button className="btn bg-base-100/70 w-15 text-primary">
+                                    <button className="btn bg-linear-to-b from-slate-100 to-slate-300 hover:from-slate-200 hover:to-slate-400 opacity-75 w-15 text-secondary border-0 shadow-inner">
                                         <AnimatePresence mode="wait">
                                             {isCopied ? (
                                                 <motion.div
@@ -158,18 +159,18 @@ export default (props) => {
                                                 animate={{ opacity: 1, scale: 1 }}
                                                 exit={{ opacity: 0, scale: 0.8 }}
                                                 >
-                                                <CopyIcon size={32} weight="thin" onClick={copiarPrompt} />
+                                                <CopyIcon size={32} weight="thin" onClick={copiarPrompt} className="text-secondary" />
                                             </motion.div>
                                             )}
                                         </AnimatePresence>
                                     </button>
                                     {/* Menu de escolher linguagem */}
                                     <div className="dropdown dropdown-top dropdown-end" onClick={() => setMenuCodeIcon(!menuCodeIcon)}>
-                                        <div tabIndex={0} role="button" className="btn m-1 bg-base-100/70">
+                                        <div tabIndex={0} role="button" className="btn m-1 bg-linear-to-b from-slate-100 to-slate-300 hover:from-slate-200 hover:to-slate-400 opacity-75 shadow-inner">
                                             {codigo[0]}
                                             {menuCodeIcon ? <CaretDownIcon size={16} weight="thin" /> : <CaretUpIcon size={16} weight="thin" />}
                                         </div>
-                                        <ul tabIndex="-1" className="dropdown-content menu bg-base-100/70 rounded-box z-1 w-52 p-2 shadow-sm">
+                                        <ul tabIndex="-1" className="dropdown-content menu bg-slate-100 opacity-60 rounded-box z-1 w-53.5 p-2 shadow-sm text-secondary">
                                             <li onClick={() => setCodigo(["YAML", yaml()])}><a>YAML</a></li>
                                             <li onClick={() => setCodigo(["JSON", json()])}><a>JSON</a></li>
                                             <li onClick={() => setCodigo(["XML", xml()])}><a>XML</a></li>
@@ -182,52 +183,55 @@ export default (props) => {
 
                         {/* Campo de obs */}
                         <div className="flex flex-col w-200">
-                            <label htmlFor="obs_area" className="text-xl mb-2">Observações</label>
-                            <textarea name="Obs" id="obs_area" className="bg-primary/10 textarea h-90 w-full text-primary" defaultValue={observacoes} onChange={(e) => setObservacoes(e.target.value)}></textarea>
+                            <label htmlFor="obs_area" className="text-2xl text-secondary font-primary mb-2">Observações</label>
+                            <Textarea name="Obs" id="obs_area" className="bg-slate-100 h-90 w-full text-secondary font-secondary" defaultValue={observacoes} onChange={(e) => setObservacoes(e.target.value)}></Textarea>
                         </div>
                     </div>
-                    <div className="w-full mt-2 flex gap-2">
+                    <hr className="text-secondary/20 mt-3.5" />
+                    <div className="w-full mt-2 flex gap-2.5 text-secondary font-secondary">
                         <div className="w-full">
                             <label 
-                            htmlFor={`select_prompt_${props.prompt.id}`}>Selecione o tipo de prompt</label>
-                            <select 
+                            htmlFor={`select_prompt_${props.prompt.id}`}
+                            className="text-xl font-primary">Selecione o tipo de prompt</label>
+                            <Select 
                             id={`select_prompt_${props.prompt.id}`} 
                             onChange={(e) => setTipoPrompt(Number(e.target.value))}
                             value={tipoPrompt} 
-                            className="select w-full">
+                            className="w-full mt-1">
                                 <option disabled>Tipo de prompt</option>
                                 <option value={0}>Sistema</option>
                                 <option value={1}>Agente</option>
                                 <option value={2}>Usuário</option>
                                 <option value={3}>Tool</option>
-                            </select>
+                            </Select>
                         </div>
-                        <div className="w-15 mt-6">
-                            <button className="btn bg-red-100 text-red-600 w-15" onClick={deletaPrompt}>
-                                <TrashIcon size={32} weight="thin" />
+                        <div className="w-15 mt-8">
+                            <button className="btn bg-linear-to-br from-red-100 to-red-200 dark:from-red-600/60 dark:to-red-700/60 text-red-600 dark:text-red-300 hover:from-red-200 hover:to-red-300 hover:dark:from-red-500/60 hover:dark:to-red-600/60 shadow-inner shadow-red-100 dark:shadow-red-600/75 w-15" onClick={deletaPrompt}>
+                                <TrashSimpleIcon size={32} weight="thin" />
                             </button>
                         </div>
                     </div>
                 </div>
 
+
                 {/* Modal de fullscreen do código */}
                 <dialog id="modal_codigo" className="modal">
-                    <div className="modal-box w-11/12 max-w-500 bg-base-100">
+                    <div className="modal-box w-11/12 max-w-500 h-160 bg-base-100">
                         <form method="dialog">
-                            <button className="btn btn-xs btn-circle btn-ghost absolute right-10 top-5 bg-red-50 text-red-700 hover:bg-red-700 hover:text-red-50" >✕</button>
+                            <button className="btn btn-sm btn-circle btn-ghost absolute right-10 top-5 bg-linear-to-b from-red-50 to-red-100 text-red-700 hover:from-red-100 hover:to-red-200 hover:text-red-800" >✕</button>
                         </form>
-                        <h3 className="text-2xl font-primary">Código</h3>
+                        <h3 className="text-2xl font-primary text-secondary">Código</h3>
                         <div className="relative mt-2">
                             <ReactCodeMirror
                                 theme="dark"
                                 extensions={[codigo[1], EditorView.lineWrapping]}
-                                height="700px"
+                                height="calc(var(--spacing) * 140)"
                                 onChange={(value) => setPrompt(value)}
                                 value={prompt}
                                 />
                             
                             <div className="absolute bottom-4 right-5">
-                                <button className="btn bg-base-100/70 w-15 text-primary">
+                                <button className="btn bg-linear-to-b from-slate-100 to-slate-300 hover:from-slate-200 hover:to-slate-400 opacity-75 w-15 text-secondary border-0 shadow-inner">
                                     <AnimatePresence mode="wait">
                                         {isCopied ? (
                                             <motion.div
@@ -251,11 +255,11 @@ export default (props) => {
                                     </AnimatePresence>
                                 </button>
                                 <div className="dropdown dropdown-top dropdown-end font-primary" onClick={() => setMenuCodeIcon(!menuCodeIcon)}>
-                                    <div tabIndex={0} role="button" className="btn m-1 bg-base-100/70">
+                                    <div tabIndex={0} role="button" className="btn m-1 bg-linear-to-b from-slate-100 to-slate-300 hover:from-slate-200 hover:to-slate-400 opacity-75 shadow-inner">
                                         {codigo[0]}
                                         {menuCodeIcon ? <CaretDownIcon size={16} weight="thin" /> : <CaretUpIcon size={16} weight="thin" />}
                                     </div>
-                                    <ul tabIndex="-1" className="dropdown-content menu bg-base-100/70 rounded-box z-1 w-52 p-2 shadow-sm">
+                                    <ul tabIndex="-1" className="dropdown-content menu bg-slate-100 opacity-60 rounded-box z-1 w-52 p-2 shadow-sm">
                                         <li onClick={() => setCodigo(["YAML", yaml()])}><a>YAML</a></li>
                                         <li onClick={() => setCodigo(["JSON", json()])}><a>JSON</a></li>
                                         <li onClick={() => setCodigo(["XML", xml()])}><a>XML</a></li>
