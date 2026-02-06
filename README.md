@@ -15,10 +15,10 @@ O projeto se encontra na BETA 1, há uma funcionalidade mínima, mas outras fun�
 - Ícone personalizado para os fluxos
 
 **Capturas de tela:**
-<img width="1788" height="864" alt="image" src="https://github.com/user-attachments/assets/fec444b5-91e9-4bc5-9b5d-542abed35785" />
-<img width="1788" height="864" alt="image" src="https://github.com/user-attachments/assets/0eb972f0-3d25-4ee7-bee3-061152f632c0" />
-<img width="1788" height="864" alt="image" src="https://github.com/user-attachments/assets/fdb253f6-174a-4615-90cb-2d52007ebe90" />
-<img width="1788" height="864" alt="image" src="https://github.com/user-attachments/assets/40cd4246-d8bf-490b-b2fb-975c110464f6" />
-<img width="1788" height="916" alt="image" src="https://github.com/user-attachments/assets/1837f5a5-dbc9-4d82-adf3-d3c6e2c602e0" />
+<img width="1788" height="864" alt="image" src="https://github.com/user-attachments/assets/f5849aab-9d66-4986-b2e9-7b51281739d3" />
+<img width="1788" height="864" alt="image" src="https://github.com/user-attachments/assets/1ed11283-d832-4267-8235-f1b6393acb53" />
+<img width="1788" height="864" alt="image" src="https://github.com/user-attachments/assets/da544cf6-9c24-4dfb-b3ac-bd8c713f70fe" />
+<img width="1788" height="864" alt="image" src="https://github.com/user-attachments/assets/4dd6a1fd-8dcb-466a-8056-45fee80fdc86" />
+<img width="1788" height="941" alt="image" src="https://github.com/user-attachments/assets/47019949-3fff-4d08-9e9d-feb2c129bea3" />
 
 
