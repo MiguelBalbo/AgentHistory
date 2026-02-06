@@ -94,11 +94,17 @@ export default () => {
             {/* modal de criar fluxo */}
             <dialog id="my_modal_3" class="modal">
                 <div class="modal-box bg-gray-100 dark:bg-gray-700  dark:text-gray-50 text-gray-900">
+                 
+                    <div className="flex gap-2">
+                        <div className="p-2 bg-accent/20 rounded-full"><PlusCircleIcon size={28} weight="thin" /></div>
+                        <h3 class="text-2xl font-primary mt-2"> Novo fluxo</h3>
+                    </div>
                     <form method="dialog">
-                    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                        <button class="btn btn-md btn-circle btn-ghost absolute right-4 top-6">✕</button>
                     </form>
 
-                    <h3 class="text-2xl font-primary">Novo fluxo</h3>
+                    <hr className="text-secondary/20 mt-3.5 -mx-6" />
+
                     <form onSubmit={(e) => {
                         localStorageRead.push({
                             id: crypto.randomUUID(),
@@ -149,7 +155,8 @@ export default () => {
                                 </div>
                             </div>
 
-                        <button className="btn bg-linear-to-b from-gray-700/90 to-gray-800/90 dark:from-slate-200 dark:to-slate-300 shadow-inner shadow-gray-600 dark:shadow-slate-100 text-white dark:text-gray-900 font-secondary font-light mt-3" type="submit">Salvar</button>
+                        <hr className="text-secondary/20 mt-3.5 -mx-6" />
+                        <button className="btn bg-linear-to-b from-gray-700/90 to-gray-800/90 dark:from-slate-200 dark:to-slate-300 shadow-inner shadow-gray-600 dark:shadow-slate-100 text-white dark:text-gray-900 font-secondary font-light mt-3 w-full" type="submit">Salvar</button>
                         {/* <button class="btn btn-accent text-primary font-primary mt-3" type="submit">Salvar</button> */}
                     </form>
 

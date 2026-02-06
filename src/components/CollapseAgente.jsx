@@ -86,16 +86,17 @@ export default (props) => {
             <div className="flex gap-2 absolute right-22 top-3 z-1">
 
                 {isEditMode ? 
-                <div className={`${tooltip ? `tooltip tooltip-warning tooltip-open` : null}`} data-tip="Digite um nome para o prompt">
+                <form className={`${tooltip ? `tooltip tooltip-warning tooltip-open font-secondary font-light` : null}`} data-tip="Digite um nome para o prompt">
                     <input 
                     type="text" 
                     placeholder="Alteração feita" 
                     value={alteracao} 
                     onChange={(e) => setAlteracao(e.target.value)} 
-                    className={`input text-primary text-xl font-primary mr-5 w-150 ${tooltip ? `border border-orange-500` : null}`} 
+                    className={`input text-secondary font-secondary text-xl mr-5 w-150 ${tooltip ? `border border-orange-500` : null}`} 
                     autoFocus 
+                    required
                     onKeyDown={(e) => {if (e.key == 'Enter' || e.key == 'Escape') fechaEdicao}} /> 
-                </div> :
+                </form> :
 
                 <h2 className="font-primary text-secondary text-2xl mt-1 mr-5 ">{alteracao}</h2>}
 

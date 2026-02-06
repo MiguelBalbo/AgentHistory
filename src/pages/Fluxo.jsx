@@ -14,6 +14,7 @@ export default () => {
     const [agenteF,setAgenteF] = useState('')
     const [subfluxoF,setSubfluxoF] = useState('')
     const [searchParams, setSearchParams] = useSearchParams();
+    const [isHovered, setIsHovered] = useState(false);    
     const fluxoSel = localStorageRead.find(f => f.id === searchParams.get("id"))
     const vetAgentes = fluxoSel.agentes
     const navigate = useNavigate();
@@ -34,7 +35,7 @@ export default () => {
             <div className="p-10">
                 <div className="flex justify-between">
                     <div className="flex gap-2">
-                        <ArrowCircleLeftIcon size={40} weight="thin" onClick={irParaHome}/>
+                        <ArrowCircleLeftIcon size={40} weight={isHovered ? "fill" : "thin"} onClick={irParaHome} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} className="cursor-pointer"/>
                         <h1 className="font-primary text-4xl">{fluxoSel.nomeFluxo}</h1>
                     </div>
                     <div className="flex gap-5">
@@ -66,7 +67,7 @@ export default () => {
                     className="bg-linear-to-br from-accent/30 to-accent/50 hover:from-accent/50 hover:to-accent/70 w-40 h-55 shadow-sm hover:shadow-xl hover:shadow-accent/25 rounded-2xl cursor-pointer" 
                     onClick={()=>document.getElementById('modal_add_agente').showModal()}>
                         <div className="flex flex-col items-center justify-center text-center font-primary text-gray-900 dark:text-gray-50 border-accent/70">
-                            <PlusCircleIcon size={44} weight="thin" />
+                            <PlusCircleIcon size={44} weight={"thin"} />
                             <h2 className="card-title">Adicionar</h2>
                         </div>
                     </button>
@@ -79,9 +80,12 @@ export default () => {
             <dialog id="modal_add_agente" class="modal">
                 <div class="modal-box px-0">
                     <div className="flex">
-                        <h3 class="text-2xl text-secondary font-primary ml-6 mt-1">Novo agente</h3>
+                        <div className="flex gap-2 ml-6">
+                            <div className="p-2 bg-accent/20 rounded-full"><PlusCircleIcon size={28} weight="thin" /></div>
+                            <h3 class="text-2xl font-primary mt-2"> Novo fluxo</h3>
+                        </div>
                         <form method="dialog">
-                            <button class="btn btn-md btn-circle btn-ghost ml-72">✕</button>
+                            <button class="btn btn-md btn-circle btn-ghost absolute top-5 right-5">✕</button>
                         </form>
                     </div>
                     <hr className="text-secondary/20 mt-3.5 -my-2" />

@@ -1,4 +1,4 @@
-import { ArrowsOutSimpleIcon, CaretDownIcon, CaretUpIcon, CheckIcon, CopyIcon, TrashSimpleIcon} from "@phosphor-icons/react"
+import { ArrowsOutSimpleIcon, CaretDownIcon, CaretUpIcon, CheckIcon, CopyIcon, TrashSimpleIcon, WarningIcon} from "@phosphor-icons/react"
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { EditorView } from '@codemirror/view';
 import { xml } from "@codemirror/lang-xml";
@@ -26,7 +26,9 @@ export default (props) => {
     const [tipoPrompt, setTipoPrompt] = useState(props.prompt.tipo)
     //se estiver deletado
     const [isDeleted, setIsDeleted] = useState(false)
-    
+    //clique duplo pra apagar
+    const [cliquesApaga, setCliquesApaga] = useState(0);
+
 
     //fluxo para achar posição no vetor do fluxo, agente e histórico
     let fluxoIndex = -1;
@@ -77,12 +79,18 @@ export default (props) => {
 
     //função de apagar prompt
     function deletaPrompt(){
-        const tempLista = [...localStorageRead]
-        tempLista[fluxoIndex].agentes[agenteIndex].historico[historicoIndex].prompts.splice(promptIndex,1)
-        setLocalStorageRead(tempLista)
-        localStorage.setItem("fluxos", JSON.stringify(localStorageRead));
-        setIsDeleted(true)
-        props.onUpdate()
+        if (cliquesApaga < 1){
+            setCliquesApaga(cliquesApaga+1)
+        } else {
+            const tempLista = [...localStorageRead]
+            tempLista[fluxoIndex].agentes[agenteIndex].historico[historicoIndex].prompts.splice(promptIndex,1)
+            setLocalStorageRead(tempLista)
+            localStorage.setItem("fluxos", JSON.stringify(localStorageRead));
+            setIsDeleted(true)
+            props.onUpdate()
+            setCliquesApaga(0)
+            document.getElementById('modal_apaga').close()
+        }
     }
 
     //salva ao alterar prompt
@@ -137,7 +145,7 @@ export default (props) => {
                                 
                                 <div className="absolute bottom-4 right-5">
                                     {/* Botão de fullscreen */}
-                                    <button className="btn bg-linear-to-b from-slate-100 to-slate-300 hover:from-slate-200 hover:to-slate-400 opacity-75 w-15 text-secondary mr-1 border-0 shadow-inner" onClick={()=>document.getElementById('modal_codigo').showModal()}>
+                                    <button className="btn bg-linear-to-b from-slate-100 to-slate-300 hover:from-slate-200 hover:to-slate-400 opacity-75 w-15 text-secondary mr-1 border-0 shadow-inner" onClick={()=>document.getElementById(`modal_codigo_${props.prompt.id}`).showModal()}>
                                         <ArrowsOutSimpleIcon size={32} weight="thin" />
                                     </button>
                                     {/* Botão de cópia */}
@@ -206,7 +214,7 @@ export default (props) => {
                             </Select>
                         </div>
                         <div className="w-15 mt-8">
-                            <button className="btn bg-linear-to-br from-red-100 to-red-200 dark:from-red-600/60 dark:to-red-700/60 text-red-600 dark:text-red-300 hover:from-red-200 hover:to-red-300 hover:dark:from-red-500/60 hover:dark:to-red-600/60 shadow-inner shadow-red-100 dark:shadow-red-600/75 w-15" onClick={deletaPrompt}>
+                            <button className="btn bg-linear-to-br from-red-100 to-red-200 dark:from-red-600/60 dark:to-red-700/60 text-red-600 dark:text-red-300 hover:from-red-200 hover:to-red-300 hover:dark:from-red-500/60 hover:dark:to-red-600/60 shadow-inner shadow-red-100 dark:shadow-red-600/75 w-15" onClick={()=>document.getElementById(`modal_apaga_${props.prompt.id}`).showModal()}>
                                 <TrashSimpleIcon size={32} weight="thin" />
                             </button>
                         </div>
@@ -214,8 +222,10 @@ export default (props) => {
                 </div>
 
 
+
+
                 {/* Modal de fullscreen do código */}
-                <dialog id="modal_codigo" className="modal">
+                <dialog id={`modal_codigo_${props.prompt.id}`} className="modal">
                     <div className="modal-box w-11/12 max-w-500 h-160 bg-base-100">
                         <form method="dialog">
                             <button className="btn btn-sm btn-circle btn-ghost absolute right-10 top-5 bg-linear-to-b from-red-50 to-red-100 text-red-700 hover:from-red-100 hover:to-red-200 hover:text-red-800" >✕</button>
@@ -267,6 +277,39 @@ export default (props) => {
                                     </ul>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <form method="dialog" className="modal-backdrop">
+                        <button>close</button>
+                    </form>
+                </dialog>
+
+
+
+
+
+                {/* Modal de confirmação de exclusão */}
+                <dialog id={`modal_apaga_${props.prompt.id}`} className="modal">
+                    <div className="modal-box bg-base-100">
+                        <form method="dialog">
+                            <button className="btn btn-md btn-circle btn-ghost absolute right-5 top-5" onClick={() => setCliquesApaga(0)} >✕</button>
+                        </form>
+                        <div className="flex gap-2">
+                            <div className="bg-red-100 dark:bg-red-600 p-2 rounded-full">
+                                <WarningIcon size={28} weight="thin" className="text-red-600 dark:text-red-100"/> 
+                            </div> 
+                            <h3 className="text-2xl font-primary text-secondary mt-2">Apagar Prompts</h3>
+                        </div>
+                        <hr className="text-secondary/20 mt-3.5 -mx-6" />
+                        
+                        <div className="mt-3.5 text-secondary font-secondary">
+                            <p>Deseja realmente apagar o prompt selecionado?</p>
+                            
+                            <button className="btn bg-linear-to-b from-red-500/90 to-red-600/90 hover:from-red-600 hover:to-red-700 hover:dark:from-red-700 hover:dark:to-red-800 dark:from-red-600 dark:to-red-700 shadow-inner shadow-red-400 dark:shadow-red-500 text-red-200 font-secondary font-light mt-3 w-full" onClick={deletaPrompt}> {cliquesApaga > 0 ? "Clique novamente para apagar" : "Apagar"}</button>
+
+                            <form method="dialog" className="flex flex-col gap-2 mt-2 font-light">
+                                <button className="btn bg-linear-to-b from-gray-700/90 hover:from-gray-800 hover:to-gray-900 to-gray-800/90 hover:dark:from-slate-300 hover:dark:to-slate-400 dark:from-slate-200 dark:to-slate-300 shadow-inner shadow-gray-600 dark:shadow-slate-100 text-white dark:text-gray-900 font-secondary font-light w-full" onClick={() => setCliquesApaga(0)}>Cancelar</button>
+                            </form>
                         </div>
                     </div>
                     <form method="dialog" className="modal-backdrop">

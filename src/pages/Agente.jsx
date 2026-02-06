@@ -1,5 +1,5 @@
 import Navbar from "../components/Navbar"
-import { ArrowCircleLeftIcon, PlusCircleIcon, TrashSimpleIcon } from "@phosphor-icons/react"
+import { ArrowCircleLeftIcon, ChatTextIcon, PlusCircleIcon, TrashSimpleIcon, WarningIcon } from "@phosphor-icons/react"
 import { useNavigate, useSearchParams } from "react-router-dom";
 import CollapseAgente from "../components/CollapseAgente";
 import { useState, useEffect } from "react";
@@ -10,6 +10,8 @@ export default () => {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const [localStorageRead, setLocalStorageRead] = useState(localStorage.getItem("fluxos") ? JSON.parse(localStorage.getItem("fluxos")) : [])
+    const [isHovered, setIsHovered] = useState(false);    
+    const [cliquesApaga, setCliquesApaga] = useState(0);
 
     //salva temporariamente pra apagar
     const [promptPos,setPromptPos] = useState([0,""]);
@@ -62,10 +64,16 @@ export default () => {
 
     //função de apagar prompt por completo
     function apagaHistorico(){
-        const tempLista = [...localStorageRead]
-        tempLista[fi].agentes[ai].historico.splice(Number(promptPos[0]), 1)
-        setLocalStorageRead(tempLista)
-        localStorage.setItem("fluxos", JSON.stringify(localStorageRead));
+        if (cliquesApaga < 1){
+            setCliquesApaga(cliquesApaga+1)
+        } else {
+            const tempLista = [...localStorageRead]
+            tempLista[fi].agentes[ai].historico.splice(Number(promptPos[0]), 1)
+            setLocalStorageRead(tempLista)
+            localStorage.setItem("fluxos", JSON.stringify(localStorageRead));
+            setCliquesApaga(0)
+            document.getElementById('modal_apaga').close()
+        }
     }
 
 
@@ -75,7 +83,7 @@ export default () => {
             <div className="p-10">
                 <div className="flex justify-between">
                     <div className="flex gap-2">
-                        <ArrowCircleLeftIcon size={40} weight="thin" onClick={voltarPag}/>
+                        <ArrowCircleLeftIcon size={40} weight={isHovered ? "fill" : "thin"} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} className="cursor-pointer" onClick={voltarPag}/>
                         <h1 className="font-primary text-4xl">{localStorageRead[fi].nomeFluxo} / {localStorageRead[fi].agentes[ai].nomeAgente}</h1>
                     </div>
                 </div>
@@ -102,14 +110,25 @@ export default () => {
             <dialog id="modal_apaga" className="modal">
                 <div className="modal-box bg-base-100">
                     <form method="dialog">
-                        <button className="btn btn-xs btn-circle btn-ghost absolute right-10 top-5 bg-red-50 text-red-700 hover:bg-red-700 hover:text-red-50" >✕</button>
+                        <button className="btn btn-md btn-circle btn-ghost absolute right-5 top-5" onClick={() => setCliquesApaga(0)} >✕</button>
                     </form>
-                    <h3 className="text-2xl font-primary mb-2">Código</h3>
-                    <p>Deseja realmente apagar o histórico selecionado "{promptPos[1]}"?</p>
-                    <form method="dialog" className="flex gap-2 mt-2">
-                        <button className="btn btn-secondary text-primary">Cancelar</button>
-                        <button className="btn bg-red-50 text-red-600" onClick={apagaHistorico}>Apagar</button>
-                    </form>
+                    <div className="flex gap-2">
+                        <div className="bg-red-100 dark:bg-red-600 p-2 rounded-full">
+                            <WarningIcon size={28} weight="thin" className="text-red-600 dark:text-red-100"/> 
+                        </div> 
+                        <h3 className="text-2xl font-primary mt-2"> Apagar Prompts</h3>
+                    </div>
+                    <hr className="text-secondary/20 mt-3.5 -mx-6" />
+                    
+                    <div className="mt-3.5 text-secondary font-secondary">
+                        <p>Deseja realmente apagar o histórico selecionado "{promptPos[1]}"?</p>
+                        
+                        <button className="btn bg-linear-to-b from-red-500/90 to-red-600/90 hover:from-red-600 hover:to-red-700 hover:dark:from-red-700 hover:dark:to-red-800 dark:from-red-600 dark:to-red-700 shadow-inner shadow-red-400 dark:shadow-red-500 text-red-200 font-secondary font-light mt-3 w-full" onClick={apagaHistorico}> {cliquesApaga > 0 ? "Clique novamente para apagar" : "Apagar"}</button>
+
+                        <form method="dialog" className="flex flex-col gap-2 mt-2 font-light">
+                            <button className="btn bg-linear-to-b from-gray-700/90 hover:from-gray-800 hover:to-gray-900 to-gray-800/90 hover:dark:from-slate-300 hover:dark:to-slate-400 dark:from-slate-200 dark:to-slate-300 shadow-inner shadow-gray-600 dark:shadow-slate-100 text-white dark:text-gray-900 font-secondary font-light w-full" onClick={() => setCliquesApaga(0)}>Cancelar</button>
+                        </form>
+                    </div>
                 </div>
                 <form method="dialog" className="modal-backdrop">
                     <button>close</button>
