@@ -8,10 +8,10 @@ import { markdown } from "@codemirror/lang-markdown";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import { Select, Textarea } from "flowbite-react";
+import { useFluxos } from "../context/FluxosContext";
 
 export default (props) => {
-    //verifica se está armazenado antes de executar o parse
-    const [localStorageRead, setLocalStorageRead] = useState(localStorage.getItem("fluxos") ? JSON.parse(localStorage.getItem("fluxos")) : [])
+    const { fluxos, updateFluxos } = useFluxos();
     //define a linguagem do código de acordo o obj recebido
     const [codigo, setCodigo] = useState(props.prompt.formato == 0 ? ["Markdown", markdown()] : props.prompt.formato == 1 ? ["XML", xml()] : props.prompt.formato == 2 ? ["JSON", json()] : ["YAML", yaml()]);
     //prompt
@@ -36,17 +36,14 @@ export default (props) => {
     let historicoIndex = -1;
     let promptIndex = -1;
 
-    for (let fi = 0; fi < localStorageRead.length; fi++) {
-        const agentes = localStorageRead[fi].agentes;
-        //console.log(agentes);
-        
-
+    for (let fi = 0; fi < fluxos.length; fi++) {
+        const agentes = fluxos[fi].agentes;
         for (let ai = 0; ai < agentes.length; ai++) {
             const historicos = agentes[ai].historico;
             for (let hi = 0; hi < historicos.length; hi++) {
                 const prompts = historicos[hi].prompts;
                 const pi = prompts.findIndex(p => p.id === props.prompt.id);
-                
+
                 if (pi !== -1) {
                     promptIndex = pi
                     fluxoIndex = fi
@@ -57,10 +54,6 @@ export default (props) => {
             }
         }
     }
-
-    console.log(props.prompt.id, promptIndex);
-    
-
 
     //realiza a cópia do prompt
     async function copiarPrompt() {
@@ -82,47 +75,54 @@ export default (props) => {
         if (cliquesApaga < 1){
             setCliquesApaga(cliquesApaga+1)
         } else {
-            const tempLista = [...localStorageRead]
-            tempLista[fluxoIndex].agentes[agenteIndex].historico[historicoIndex].prompts.splice(promptIndex,1)
-            setLocalStorageRead(tempLista)
-            localStorage.setItem("fluxos", JSON.stringify(localStorageRead));
+            const newFluxos = [...fluxos];
+            newFluxos[fluxoIndex].agentes[agenteIndex].historico[historicoIndex].prompts.splice(promptIndex,1)
+            updateFluxos(newFluxos);
             setIsDeleted(true)
             props.onUpdate()
             setCliquesApaga(0)
-            document.getElementById('modal_apaga').close()
+            document.getElementById(`modal_apaga_${props.prompt.id}`).close()
         }
     }
 
-    //salva ao alterar prompt
+    // Sincroniza as mudanças no prompt
     useEffect(() => {
-        const tempLista = [...localStorageRead]
-        tempLista[fluxoIndex].agentes[agenteIndex].historico[historicoIndex].prompts[promptIndex].conteudo = prompt
-        setLocalStorageRead(tempLista)
-        localStorage.setItem("fluxos", JSON.stringify(localStorageRead));
+        if (fluxoIndex !== -1 && promptIndex !== -1 && fluxos[fluxoIndex].agentes[agenteIndex].historico[historicoIndex].prompts[promptIndex].conteudo !== prompt) {
+            const newFluxos = [...fluxos];
+            newFluxos[fluxoIndex].agentes[agenteIndex].historico[historicoIndex].prompts[promptIndex].conteudo = prompt;
+            updateFluxos(newFluxos);
+        }
     }, [prompt]);
 
-    //salva ao alterar obs
+    // Sincroniza as mudanças nas observações
     useEffect(() => {
-        const tempLista = [...localStorageRead]
-        tempLista[fluxoIndex].agentes[agenteIndex].historico[historicoIndex].prompts[promptIndex].obs = observacoes
-        setLocalStorageRead(tempLista)
-        localStorage.setItem("fluxos", JSON.stringify(localStorageRead));
+        if (fluxoIndex !== -1 && promptIndex !== -1 && fluxos[fluxoIndex].agentes[agenteIndex].historico[historicoIndex].prompts[promptIndex].obs !== observacoes) {
+            const newFluxos = [...fluxos];
+            newFluxos[fluxoIndex].agentes[agenteIndex].historico[historicoIndex].prompts[promptIndex].obs = observacoes;
+            updateFluxos(newFluxos);
+        }
     }, [observacoes]);
 
-    //salvar ao alterar linguagem
+    // Sincroniza as mudanças no formato
     useEffect(() => {
-        const tempLista = [...localStorageRead]
-        tempLista[fluxoIndex].agentes[agenteIndex].historico[historicoIndex].prompts[promptIndex].formato = (codigo[0] == "Markdown" ? 0 : codigo[0] == "XML" ? 1 : codigo[0] == "JSON" ? 2 : 3)
-        setLocalStorageRead(tempLista)
-        localStorage.setItem("fluxos", JSON.stringify(localStorageRead));
+        if (fluxoIndex !== -1 && promptIndex !== -1) {
+            const formatoNum = (codigo[0] == "Markdown" ? 0 : codigo[0] == "XML" ? 1 : codigo[0] == "JSON" ? 2 : 3);
+            if (fluxos[fluxoIndex].agentes[agenteIndex].historico[historicoIndex].prompts[promptIndex].formato !== formatoNum) {
+                const newFluxos = [...fluxos];
+                newFluxos[fluxoIndex].agentes[agenteIndex].historico[historicoIndex].prompts[promptIndex].formato = formatoNum;
+                updateFluxos(newFluxos);
+            }
+        }
     }, [codigo]);
 
+    // Sincroniza as mudanças no tipo de prompt
     useEffect(() => {
-        const tempLista = localStorageRead
-        tempLista[fluxoIndex].agentes[agenteIndex].historico[historicoIndex].prompts[promptIndex].tipo = tipoPrompt
-        setLocalStorageRead(tempLista)
-        localStorage.setItem("fluxos", JSON.stringify(localStorageRead));
-        props.onUpdate();
+        if (fluxoIndex !== -1 && promptIndex !== -1 && fluxos[fluxoIndex].agentes[agenteIndex].historico[historicoIndex].prompts[promptIndex].tipo !== tipoPrompt) {
+            const newFluxos = [...fluxos];
+            newFluxos[fluxoIndex].agentes[agenteIndex].historico[historicoIndex].prompts[promptIndex].tipo = tipoPrompt;
+            updateFluxos(newFluxos);
+            props.onUpdate();
+        }
     }, [tipoPrompt]);
 
     return (
@@ -142,7 +142,7 @@ export default (props) => {
                                     onChange={(value) => setPrompt(value)}
                                     value={prompt}
                                     />
-                                
+
                                 <div className="absolute bottom-4 right-5">
                                     {/* Botão de fullscreen */}
                                     <button className="btn bg-linear-to-b from-slate-100 to-slate-300 hover:from-slate-200 hover:to-slate-400 opacity-75 w-15 text-secondary mr-1 border-0 shadow-inner" onClick={()=>document.getElementById(`modal_codigo_${props.prompt.id}`).showModal()}>
@@ -190,7 +190,7 @@ export default (props) => {
                         </div>
 
                         {/* Campo de obs */}
-                        <div className="flex flex-col w-200">
+                        <div className="flex flex-col w-96">
                             <label htmlFor="obs_area" className="text-2xl text-secondary font-primary mb-2">Observações</label>
                             <Textarea name="Obs" id="obs_area" className="bg-slate-100 h-90 w-full text-secondary font-secondary" defaultValue={observacoes} onChange={(e) => setObservacoes(e.target.value)}></Textarea>
                         </div>
@@ -239,7 +239,7 @@ export default (props) => {
                                 onChange={(value) => setPrompt(value)}
                                 value={prompt}
                                 />
-                            
+
                             <div className="absolute bottom-4 right-5">
                                 <button className="btn bg-linear-to-b from-slate-100 to-slate-300 hover:from-slate-200 hover:to-slate-400 opacity-75 w-15 text-secondary border-0 shadow-inner">
                                     <AnimatePresence mode="wait">
@@ -301,10 +301,10 @@ export default (props) => {
                             <h3 className="text-2xl font-primary text-secondary mt-2">Apagar Prompts</h3>
                         </div>
                         <hr className="text-secondary/20 mt-3.5 -mx-6" />
-                        
+
                         <div className="mt-3.5 text-secondary font-secondary">
                             <p>Deseja realmente apagar o prompt selecionado?</p>
-                            
+
                             <button className="btn bg-linear-to-b from-red-500/90 to-red-600/90 hover:from-red-600 hover:to-red-700 hover:dark:from-red-700 hover:dark:to-red-800 dark:from-red-600 dark:to-red-700 shadow-inner shadow-red-400 dark:shadow-red-500 text-red-200 font-secondary font-light mt-3 w-full" onClick={deletaPrompt}> {cliquesApaga > 0 ? "Clique novamente para apagar" : "Apagar"}</button>
 
                             <form method="dialog" className="flex flex-col gap-2 mt-2 font-light">

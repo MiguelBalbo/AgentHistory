@@ -7,15 +7,15 @@ import imageCompression from 'browser-image-compression';
 import { Squircle } from "@squircle-js/react"
 import { useDropzone } from "react-dropzone";
 import { Label, FileInput, Select, TextInput } from "flowbite-react";
+import { useFluxos } from "../context/FluxosContext"
 
 
 
 export default () => {
 
-    const localStorageRead = localStorage.getItem("fluxos") ? JSON.parse(localStorage.getItem("fluxos")) : []
+    const { fluxos, updateFluxos } = useFluxos();
 
     const contrato = new Set()
-    const [cards, setCards] = useState(localStorageRead)
     const [filtro, setFiltro] = useState('tudo')
     const [fluxo, setFluxo] = useState();
     const [contratoF, setContratoF] = useState();
@@ -23,14 +23,14 @@ export default () => {
     const [busca,setBusca] = useState('')
     const {getRootProps, getInputProps, isDragActive, isDragReject} = 
     useDropzone({accept: {"image/*": []}, maxFiles: 1, onDrop: (files) => {handleImagem(files)}});
-    
-    
-    
-    {cards.map(item => {
+
+
+
+    {fluxos.map(item => {
         contrato.add(item.contrato)
     })}
 
-    
+
 
     async function handleImagem(e) {
         const file = e[0];
@@ -52,7 +52,7 @@ export default () => {
             <div className="p-10">
                 <div className="flex justify-between">
                     <h1 className="font-primary text-4xl">Home</h1>
-                    
+
                     <div className="flex gap-5">
                         <div className="w-100">
                             <TextInput className="text-secondary font-secondary font-light" type="text" icon={MagnifyingGlassIcon} placeholder="Buscar" onChange={(e) => setBusca(e.target.value)} />
@@ -69,7 +69,7 @@ export default () => {
                 </div>
 
                 <div className="mt-5 flex gap-5 flex-wrap">
-                    {cards
+                    {fluxos
                     .filter(card => filtro === 'tudo' || card.contrato === filtro)
                     .filter(card => filtro === '' || card.nomeFluxo.toLowerCase().includes(busca.toLowerCase()) )
                     .map(item => {
@@ -86,7 +86,7 @@ export default () => {
                         </div>
                     </button>
                 </div>
-            
+
             </div>
 
 
@@ -94,7 +94,7 @@ export default () => {
             {/* modal de criar fluxo */}
             <dialog id="my_modal_3" class="modal">
                 <div class="modal-box bg-gray-100 dark:bg-gray-700  dark:text-gray-50 text-gray-900">
-                 
+
                     <div className="flex gap-2">
                         <div className="p-2 bg-accent/20 rounded-full"><PlusCircleIcon size={28} weight="thin" /></div>
                         <h3 class="text-2xl font-primary mt-2"> Novo fluxo</h3>
@@ -106,15 +106,16 @@ export default () => {
                     <hr className="text-secondary/20 mt-3.5 -mx-6" />
 
                     <form onSubmit={(e) => {
-                        localStorageRead.push({
+                        e.preventDefault();
+                        const newFluxos = [...fluxos, {
                             id: crypto.randomUUID(),
                             icone: base64,
                             nomeFluxo: fluxo,
                             contrato: contratoF,
                             agentes: []
-                        })
-
-                        localStorage.setItem("fluxos", JSON.stringify(localStorageRead))
+                        }];
+                        updateFluxos(newFluxos);
+                        document.getElementById('my_modal_3').close();
                     }} className="">
                         <div className="mt-3">
                             <label htmlFor="fluxoinpt" className="font-secondary">Nome do fluxo</label>
@@ -139,7 +140,7 @@ export default () => {
                                 ${isDragReject ? "border-error bg-error/10" : ""}
                             `}>
                                 <input {...getInputProps()} />
-                                
+
                                 {
                                     base64 ?
                                     <div className="flex flex-col items-center gap-1 text-center" onClick={() => setBase64('')}>
@@ -157,13 +158,12 @@ export default () => {
 
                         <hr className="text-secondary/20 mt-3.5 -mx-6" />
                         <button className="btn bg-linear-to-b from-gray-700/90 to-gray-800/90 dark:from-slate-200 dark:to-slate-300 shadow-inner shadow-gray-600 dark:shadow-slate-100 text-white dark:text-gray-900 font-secondary font-light mt-3 w-full" type="submit">Salvar</button>
-                        {/* <button class="btn btn-accent text-primary font-primary mt-3" type="submit">Salvar</button> */}
                     </form>
 
 
                 </div>
             </dialog>
         </div>
-        
+
     )
 }

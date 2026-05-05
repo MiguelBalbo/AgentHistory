@@ -5,11 +5,12 @@ import { useState } from "react";
 import imageCompression from 'browser-image-compression';
 import { Squircle } from "@squircle-js/react";
 import { useDropzone } from "react-dropzone";
+import { useFluxos } from "../context/FluxosContext";
 
 
 export default (props) => {
     const navigate = useNavigate();
-    const [localStorageRead, setLocalStorageRead] = useState(localStorage.getItem("fluxos") ? JSON.parse(localStorage.getItem("fluxos")) : [])
+    const { fluxos, updateFluxos } = useFluxos();
     const [fluxo, setFluxo] = useState(props.item.nomeFluxo);
     const [contrato, setContrato] = useState(props.item.contrato);
     const [base64, setBase64] = useState(props.item.icone); 
@@ -27,12 +28,13 @@ export default (props) => {
         if (cliquesApaga < 1){
             setCliquesApaga(cliquesApaga+1)
         } else {
-            const lsrTemp = localStorageRead
-            //console.log(lsrTemp);
-            lsrTemp.splice(fi, 1)
-            setLocalStorageRead(lsrTemp)
-            localStorage.setItem("fluxos", JSON.stringify(localStorageRead));
-            setIsDeleted(true)
+            const fi = fluxos.findIndex(f => f.id === props.item.id);
+            if (fi !== -1) {
+                const newFluxos = [...fluxos];
+                newFluxos.splice(fi, 1);
+                updateFluxos(newFluxos);
+                setIsDeleted(true)
+            }
             setCliquesApaga(0)
         }
     }
@@ -45,17 +47,17 @@ export default (props) => {
             useWebWorker: true,     
             fileType: 'image/webp'  
         };
-        const compressedFile = await imageCompression(file, options)
-        setBase64(await imageCompression.getDataUrlFromFile(compressedFile));
-        console.log(base64);
+        try {
+            const compressedFile = await imageCompression(file, options)
+            const url = await imageCompression.getDataUrlFromFile(compressedFile);
+            setBase64(url);
+        } catch (error) {
+            console.error("Erro ao comprimir imagem:", error);
+        }
     }
 
-    //console.log(props);
-    //console.log(props.id);
+    const fi = fluxos.findIndex(f => f.id === props.item.id);
 
-    let fi;
-    fi = localStorageRead.findIndex(f => f.id === props.item.id);
-    
 
     return(
         <>
@@ -85,7 +87,7 @@ export default (props) => {
                             </div>
                         </div>
                     </div>
-                    
+
 
 
                     {/* modal de editar fluxo */}
@@ -102,15 +104,13 @@ export default (props) => {
                             <hr className="text-secondary/20 mt-3.5 -mx-6" />
                             <form onSubmit={(e) => {
                                 e.preventDefault();
-                                const lsrTemp = localStorageRead
-                                lsrTemp[fi].icone = base64
-                                lsrTemp[fi].nomeFluxo = fluxo
-                                lsrTemp[fi].contrato = contrato
-                                
-                                setLocalStorageRead(lsrTemp)
-                                console.log(localStorageRead);
-                                
-                                localStorage.setItem("fluxos", JSON.stringify(localStorageRead));
+                                if (fi !== -1) {
+                                    const newFluxos = [...fluxos];
+                                    newFluxos[fi].icone = base64
+                                    newFluxos[fi].nomeFluxo = fluxo
+                                    newFluxos[fi].contrato = contrato
+                                    updateFluxos(newFluxos);
+                                }
                                 document.getElementById(idModal).close()
                             }} className="">
                                 <div className="mt-3">
@@ -122,7 +122,7 @@ export default (props) => {
                                     <label htmlFor="contratoinpt" className="font-secondary ">Nome do contrato</label>
                                     <input defaultValue={contrato} onChange={(e) => setContrato(e.target.value)} type="text" id="contratoinpt" placeholder="Digite o nome do contrato" className="input w-full font-secondary " required />
                                 </div>
-                            
+
                                 <div className="mt-3">
                                     <label htmlFor="iconinpt" class="font-secondary ">Ícone do fluxo</label>
                                     <div className="flex gap-5 mt-2">
@@ -138,7 +138,7 @@ export default (props) => {
                                             ${isDragReject ? "border-error bg-error/10" : ""}
                                         `}>
                                             <input {...getInputProps()} />
-                                            
+
                                             {
                                                 base64 ?
                                                 <div className="flex flex-col items-center gap-1 text-center" onClick={() => setBase64('')}>
@@ -176,10 +176,10 @@ export default (props) => {
                                 <h3 className="text-2xl font-primary text-secondary mt-2">Apagar Prompts</h3>
                             </div>
                             <hr className="text-secondary/20 mt-3.5 -mx-6" />
-                            
+
                             <div className="mt-3.5 text-secondary font-secondary">
                                 <p>Deseja realmente apagar o prompt selecionado?</p>
-                                
+
                                 <button className="btn bg-linear-to-b from-red-500/90 to-red-600/90 hover:from-red-600 hover:to-red-700 hover:dark:from-red-700 hover:dark:to-red-800 dark:from-red-600 dark:to-red-700 shadow-inner shadow-red-400 dark:shadow-red-500 text-red-200 font-secondary font-light mt-3 w-full" onClick={deleteFluxo}> {cliquesApaga > 0 ? "Clique novamente para apagar" : "Apagar"}</button>
 
                                 <form method="dialog" className="flex flex-col gap-2 mt-2 font-light">

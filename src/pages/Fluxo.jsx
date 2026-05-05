@@ -4,19 +4,21 @@ import { useState } from "react"
 import { ArrowCircleLeftIcon, MagnifyingGlassIcon, PlusCircleIcon } from "@phosphor-icons/react"
 import { useSearchParams, useNavigate } from "react-router-dom"
 import { TextInput, Select } from "flowbite-react"
+import { useFluxos } from "../context/FluxosContext"
 
 
 export default () => {
-    
-    const localStorageRead = localStorage.getItem("fluxos") ? JSON.parse(localStorage.getItem("fluxos")) : []
+
+    const { fluxos, updateFluxos } = useFluxos();
     const [filtro, setFiltro] = useState('tudo')
     const [busca,setBusca] = useState('')
     const [agenteF,setAgenteF] = useState('')
     const [subfluxoF,setSubfluxoF] = useState('')
     const [searchParams, setSearchParams] = useSearchParams();
     const [isHovered, setIsHovered] = useState(false);    
-    const fluxoSel = localStorageRead.find(f => f.id === searchParams.get("id"))
-    const vetAgentes = fluxoSel.agentes
+    const fluxoSIdx = fluxos.findIndex(f => f.id === searchParams.get("id"))
+    const fluxoSel = fluxoSIdx !== -1 ? fluxos[fluxoSIdx] : null
+    const vetAgentes = fluxoSel ? fluxoSel.agentes : []
     const navigate = useNavigate();
 
     const subfluxo = new Set()
@@ -24,10 +26,12 @@ export default () => {
         subfluxo.add(item.subfluxo)
     })}
 
-    
+
     function irParaHome() {
         navigate(-1);
     }
+
+    if (!fluxoSel) return null;
 
     return (
         <>
@@ -46,7 +50,7 @@ export default () => {
                             <option selected value='tudo'>Todos os subfluxos</option>
                             {Array.from(subfluxo).map(item => {
                                 return(
-                                    <option value={item}>{item}</option>
+                                    <option key={item} value={item}>{item}</option>
                                 )
                             })}
                         </Select>
@@ -56,7 +60,7 @@ export default () => {
                 <div className="mt-5 flex gap-5 flex-wrap">
                     {vetAgentes
                         .filter(card => filtro === 'tudo' || card.subfluxo === filtro)
-                        .filter(card => filtro === '' || card.nomeAgente.toLowerCase().includes(busca.toLowerCase()))
+                        .filter(card => card.nomeAgente.toLowerCase().includes(busca.toLowerCase()))
                         .map(item => {
 
                             return (
@@ -93,21 +97,16 @@ export default () => {
                     <form onSubmit={(e) => {
                         e.preventDefault();
 
-                        vetAgentes.push({
+                        const newFluxos = [...fluxos];
+                        newFluxos[fluxoSIdx].agentes.push({
                             id: crypto.randomUUID(),
                             nomeAgente: agenteF,
                             subfluxo: subfluxoF,
                             historico: []
-                        })
-                        
-                        console.log(localStorageRead)
-                        const index = localStorageRead.findIndex(obj => obj.id === fluxoSel.id);
+                        });
 
-                        console.log(index)
-                        localStorageRead[index].agentes = vetAgentes
-                        localStorage.setItem("fluxos", JSON.stringify(localStorageRead))
-
-                        window.location.reload();
+                        updateFluxos(newFluxos);
+                        document.getElementById('modal_add_agente').close();
 
                     }} className="px-6 mt-5">
 
